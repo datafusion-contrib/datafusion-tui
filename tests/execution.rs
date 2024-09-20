@@ -15,18 +15,18 @@
 // specific language governing permissions and limitations
 // under the License.
 
-//! Tests for extensions (stored in the `extension_cases` directory)
+//! Tests for `ExecutionContext` and extensions (stored in the `execution_cases` directory)
 
 use datafusion::arrow::array::RecordBatch;
 use datafusion::arrow::util::pretty::pretty_format_batches;
+use datafusion::error::Result;
 use datafusion::sql::parser::DFParser;
-use datafusion_common::Result;
 use dft::config::AppConfig;
 use dft::execution::ExecutionContext;
 use futures::{StreamExt, TryStreamExt};
 use log::debug;
 
-mod extension_cases;
+mod execution_cases;
 
 /// Encapsulates an `ExecutionContext` for running queries in tests
 pub struct TestExecution {
