@@ -15,10 +15,12 @@
 // specific language governing permissions and limitations
 // under the License.
 
+mod cf_metadata;
 mod cf_metrics;
 mod metadata;
 mod sstables;
 
+pub use cf_metadata::RocksDbCfMetadataFunc;
 pub use cf_metrics::RocksDbCfMetricsFunc;
 pub use metadata::RocksDbMetadataFunc;
 pub use sstables::RocksDbSstablesFunc;

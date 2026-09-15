@@ -256,6 +256,13 @@ FROM rocksdb_sstables('/path/to/db') ORDER BY size_bytes DESC;
 SELECT * FROM rocksdb_sstables('/path/to/db', 'my_cf');
 ```
 
+This function exposes RocksDB's `GetLiveFilesMetaData()` API. `rocksdb_cf_metadata` exposes the companion `GetColumnFamilyMetaData()` API, returning total live SST size and file count for each column family. It accepts the same optional column-family filter:
+
+```sql
+SELECT * FROM rocksdb_cf_metadata('/path/to/db');
+SELECT * FROM rocksdb_cf_metadata('/path/to/db', 'my_cf');
+```
+
 `rocksdb_cf_metrics` returns one row per column family and RocksDB property (long format: `column_family`, `property`, `value`), covering key counts, SST and memtable sizes, compaction state, block cache usage, and per-level file counts (`rocksdb.num-files-at-level0` and up).  An optional second argument filters to a single column family:
 
 ```sql
@@ -416,5 +423,4 @@ CREATE EXTERNAL TABLE hf4 STORED AS PARQUET LOCATION 'hf://HuggingFaceTB-finemat
 ```
 
 The "/" in the `repo_id` is replaced with a "-" for the base url that is registered with DataFusion to work better with its path parsing.
-
 

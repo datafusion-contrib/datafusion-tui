@@ -3,6 +3,10 @@ edition = "2021"
 name = "datafusion-app"
 version = "0.1.0"
 
+[package.metadata.cargo-machete]
+# This dependency intentionally constrains a transitive version.
+ignored = ["datafusion-federation"]
+
 # Leaving Hudi and Iceberg around in case traction on those picks up.  It would be better if I just remove them from main and create PRs with the diff - maybe ill get around to that.
 
 [dependencies]
@@ -18,6 +22,9 @@ datafusion-functions-json = { optional = true, version = "0.54" }
 datafusion-functions-parquet = { optional = true, path = "../datafusion-functions-parquet", version = "0.1.0" }
 datafusion-functions-rocksdb = { optional = true, path = "../datafusion-functions-rocksdb", version = "0.1.0" }
 datafusion-net = { optional = true, path = "../datafusion-net", version = "0.1.0" }
+# Keep datafusion-table-providers 0.13 on its DataFusion 54-compatible
+# federation release. Federation 0.5.6 moved to DataFusion 55.
+datafusion-federation = { optional = true, version = "=0.5.5" }
 datafusion-table-providers = { optional = true, version = "0.13.0" }
 datafusion-udfs-wasm = { features = [
   "serde",
@@ -66,6 +73,7 @@ criterion = { features = ["async_tokio"], version = "0.5.1" }
 [features]
 clickhouse = [
   "datafusion-table-providers/clickhouse",
+  "dep:datafusion-federation",
   "dep:datafusion-table-providers",
 ]
 default = ["functions-parquet"]
@@ -78,6 +86,7 @@ functions-rocksdb = ["dep:datafusion-functions-rocksdb"]
 huggingface = ["object_store_opendal", "opendal", "url"]
 mongodb = [
   "datafusion-table-providers/mongodb",
+  "dep:datafusion-federation",
   "dep:datafusion-table-providers",
 ]
 net = ["datafusion-net/live", "dep:datafusion-net"]

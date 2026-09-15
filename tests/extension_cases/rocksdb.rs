@@ -86,6 +86,32 @@ async fn test_rocksdb_sstables() {
     "###);
 }
 
+/// Ensure the RocksDB column-family metadata method is registered and
+/// returns one row per column family.
+#[tokio::test(flavor = "multi_thread")]
+async fn test_rocksdb_cf_metadata() {
+    let execution = TestExecution::new().await;
+
+    let dir = tempfile::tempdir().unwrap();
+    create_db(dir.path());
+
+    let sql = format!(
+        "SELECT column_family, file_count, size_bytes > 0 AS has_data \
+         FROM rocksdb_cf_metadata('{}') ORDER BY column_family",
+        dir.path().display()
+    );
+    let actual = execution.run_and_format(&sql).await;
+
+    insta::assert_yaml_snapshot!(actual, @r###"
+    - +---------------+------------+----------+
+    - "| column_family | file_count | has_data |"
+    - +---------------+------------+----------+
+    - "| default       | 1          | true     |"
+    - "| metrics       | 1          | true     |"
+    - +---------------+------------+----------+
+    "###);
+}
+
 /// Ensure the rocksdb column family metrics function is registered and
 /// returns per-column-family properties
 #[tokio::test(flavor = "multi_thread")]

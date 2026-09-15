@@ -5,7 +5,8 @@ DataFusion table functions for inspecting RocksDB databases. Databases are opene
 ## Functions
 
 - `rocksdb_metadata(path)` — a single summary row: column families, latest sequence number, live SST file count and total size, estimated key count, snapshot count, and MANIFEST / WAL file details.
-- `rocksdb_sstables(path [, cf])` — one row per live SST file: column family, file name, LSM level, size, entry and deletion counts, and key range (as lossless hex and lossy UTF-8).
+- `rocksdb_sstables(path [, cf])` — exposes `GetLiveFilesMetaData()` as one row per live SST file: column family, file name, LSM level, size, entry and deletion counts, and key range (as lossless hex and lossy UTF-8).
+- `rocksdb_cf_metadata(path [, cf])` — exposes `GetColumnFamilyMetaData()` as one row per column family: total live SST size and file count.
 - `rocksdb_cf_metrics(path [, cf])` — one row per column family and RocksDB property (long format): key counts, SST / memtable sizes, compaction state, block cache usage, and per-level file counts.
 
 ## Example
@@ -13,6 +14,7 @@ DataFusion table functions for inspecting RocksDB databases. Databases are opene
 ```sql
 SELECT * FROM rocksdb_metadata('/path/to/db');
 SELECT column_family, file_name, level, size_bytes, num_entries FROM rocksdb_sstables('/path/to/db');
+SELECT * FROM rocksdb_cf_metadata('/path/to/db', 'default');
 SELECT * FROM rocksdb_cf_metrics('/path/to/db', 'default') WHERE property = 'rocksdb.estimate-num-keys';
 ```
 

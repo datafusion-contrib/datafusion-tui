@@ -242,6 +242,10 @@ impl ExecutionContext {
                 Arc::new(datafusion_functions_rocksdb::RocksDbSstablesFunc {}),
             );
             session_ctx.register_udtf(
+                "rocksdb_cf_metadata",
+                Arc::new(datafusion_functions_rocksdb::RocksDbCfMetadataFunc {}),
+            );
+            session_ctx.register_udtf(
                 "rocksdb_cf_metrics",
                 Arc::new(datafusion_functions_rocksdb::RocksDbCfMetricsFunc {}),
             );
